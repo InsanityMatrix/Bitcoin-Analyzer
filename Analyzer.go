@@ -1,7 +1,8 @@
 package main
 
 type BitcoinAnalyzer struct {
-	CurrentBlock uint64 `json:"currentBlock"`
+	CurrentBlock     uint64  `json:"currentBlock"`
+	MonitorThreshold float64 `json:"monitorThreshold"`
 }
 
 func (a *BitcoinAnalyzer) updateBlock(block uint64) {

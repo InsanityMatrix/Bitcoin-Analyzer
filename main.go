@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"path/filepath"
 
 	bitcoind "github.com/toorop/go-bitcoind"
@@ -11,7 +12,6 @@ const (
 	SERVER_HOST       = "127.0.0.1"
 	SERVER_PORT       = 8332
 	USER              = "bitcoin_analyzer"
-	PASSWD            = "!LiNK3d-Up14&iDont!TRU5T.U"
 	USESSL            = false
 	WALLET_PASSPHRASE = "WalletPassphrase"
 )
@@ -24,7 +24,8 @@ func main() {
 	DATADIRpath, _ := filepath.Abs(DATADIRstr)
 	DATADIR = DataDir{DATADIRpath}
 	//Connect to btc rpc server
-	CLIENT, err := bitcoind.New(SERVER_HOST, SERVER_PORT, USER, PASSWD, USESSL)
+	password := os.Getenv("ANALYZER_PASS")
+	CLIENT, err := bitcoind.New(SERVER_HOST, SERVER_PORT, USER, password, USESSL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,6 +44,7 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Printf("Current Block count: %d", blockcount)
+	//IF current blockcount is greater than the blockcount in the config file, start analyzing blocks
 
 }
 
@@ -81,7 +83,7 @@ func initialize(STARTBLOCK uint64) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		ANALYZER = BitcoinAnalyzer{blockcount - 1}
+		ANALYZER = BitcoinAnalyzer{CurrentBlock: blockcount - 1}
 
 	}
 	//Write to config file the current BitcoinAnalyzer struct
@@ -89,5 +91,4 @@ func initialize(STARTBLOCK uint64) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }
