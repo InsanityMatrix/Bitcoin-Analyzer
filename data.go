@@ -11,12 +11,6 @@ type DataDir struct {
 	dir string
 }
 
-type Address struct {
-	Owner          string        `json:"owner"`
-	Address        string        `json:"address"`
-	Transactions   []Transaction `json:"transactions"`
-	CurrentBalance float64       `json:"currentBalance"`
-}
 type Transaction struct {
 	Sender           string  `json:"sender"`
 	Recipient        string  `json:"recipient"`

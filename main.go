@@ -59,7 +59,7 @@ func initialize(STARTBLOCK uint64) {
 	}
 
 	//Create the necessary folders
-	err := DATADIR.createDir("addresses")
+	err := DATADIR.createDir("wallets")
 	if err != nil {
 		log.Fatal(err)
 	}
