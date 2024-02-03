@@ -39,13 +39,13 @@ func (a *BitcoinAnalyzer) isWalletMonitored(scriptPubKey bitcoind.ScriptPubKey) 
 
 }
 
-//TODO:
-//Check if Transactions/Wallets are dead
-//Add Monitored Transactions through wallets
-//Check if Monitored Wallet is exchange
-//How to handle following UTXO's?
-//Saving to files
-//Will this program eat all of the ram on the computer
+// TODO:
+// Check if Transactions/Wallets are dead
+// Add Monitored Transactions through wallets
+// Check if Monitored Wallet is exchange
+// How to handle following UTXO's?
+// Saving to files
+// Will this program eat all of the ram on the computer
 func (a *BitcoinAnalyzer) analyzeBlock(blockNum uint64) uint64 {
 	//Get the block hash of the current block
 	blockhash, err := CLIENT.GetBlockHash(blockNum)
@@ -115,11 +115,17 @@ func (a *BitcoinAnalyzer) analyzeBlock(blockNum uint64) uint64 {
 	a.updateBlock(blockNum)
 	//Now Maintain Each List
 
-	//Check if any monitored address is dead (No transactions in 2016 blocks)
+	//Check if any monitored address is dead or evaluate(No transactions in 2016 blocks)
 	for index, wallet := range a.MonitoredWallets {
-		if wallet.isDead(blockNum) {
-			//Remove the monitored address
-			a.MonitoredWallets = append(a.MonitoredWallets[:index], a.MonitoredWallets[index+1:]...)
+		if wallet.isEval(blockNum) {
+			if wallet.isDead(blockNum) {
+				//Remove the monitored address
+				a.MonitoredWallets = append(a.MonitoredWallets[:index], a.MonitoredWallets[index+1:]...)
+			}
+			if wallet.evalExchange(blockNum) {
+				//TODO: Remove monitored address, add to an exchange list, save wallet info to file
+
+			}
 		}
 	}
 
